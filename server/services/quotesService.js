@@ -10,8 +10,13 @@ class QuotesService {
     }
 
     async saveInfo(arrayQuotes) {
+        // parsea respuesta
         const arrayQuotesJson = JSON.parse(arrayQuotes)
+
+        // elimina todos los registros anteriores en lastValue collection
         await lastValueService.deleteAll()
+
+        // armado de información a guardar
         const tiempoTranscurrido = Date.now();
         const hoy = new Date(tiempoTranscurrido);
         for (let i = 0; i < arrayQuotesJson.length; i++) {
@@ -29,6 +34,8 @@ class QuotesService {
                 parseFloat(arrayQuotesJson[i].lastPrice),
                 parseFloat(arrayQuotesJson[i].volumen)
             )
+
+            // guardado de información
             lastValueService.saveInfo(quote)
             quotesRepository.subirInfo(quote);
         }

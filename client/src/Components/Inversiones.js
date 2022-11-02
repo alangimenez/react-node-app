@@ -54,6 +54,7 @@ function Inversiones() {
                     <th scope='col'>Ùltimo precio</th>
                     <th scope='col'>Precio de cierre</th>
                     <th scope='col'>Volumen</th>
+                    <th scope='col'>TIR</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -64,6 +65,7 @@ function Inversiones() {
                         <td>{e.lastPrice}</td>
                         <td>{e.closePrice}</td>
                         <td>{e.volume}</td>
+                        <td></td>
                     </tr>)
                 }
                 </tbody>

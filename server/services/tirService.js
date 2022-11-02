@@ -11,11 +11,19 @@ class TirService {
     constructor() {}
 
     async getTir() {
-        const cashFlows = await cashFlowRepository.leerInfo() // ir a service de cashFlow
+        // obtiene los cashFlows de todos los bonos (cambiar repository por service)
+        const cashFlows = await cashFlowRepository.leerInfo()
+
+        // calculo del tir
         let arrayTir = []
         for (let i = 0; i < cashFlows.length; i++) {
+            // obtiene la última cotizacion guardada de un bono en particular
             const lastValueBond = await lastValueService.getInfoByBondName(cashFlows[i].bondName);
+
+            // agrega la inversión en el momento cero al cashflow
             cashFlows[i].cashFlow.unshift(-(lastValueBond[0].closePrice -1 +1));
+
+            // calcula la tir y guarda la información en la base de datos
             let tirMonthly = irr(cashFlows[i].cashFlow)
             let tirAnnual = Math.pow(1+tirMonthly, 12)
             let tirAnnualRound = this.roundToTwo(((tirAnnual)-1))
@@ -25,6 +33,8 @@ class TirService {
                 new Date().toLocaleString(), 
                 tirAnnualRound)
             tirRepository.subirInfo(tirModel)
+
+            // incorpora el resultado de la tir en un array que se devuelve posterior al bucle
             let tirResponse = new TirResponse(
                 tirModel.bondName,
                 cashFlows[i].company,
@@ -41,32 +51,40 @@ class TirService {
     }
 
     async getTirDaily() {
-        const cashFlowsData = await cashFlowRepository.leerInfo() // ir a service de cashFlow
-        console.log(cashFlowsData[2].finish)
+        // obtiene los cashFlows de todos los bonos (cambiar repository por service)
+        const cashFlowsData = await cashFlowRepository.leerInfo()
+
+        // calcula cuantos días faltan hasta el vencimiento del ticket
         const daysDiff = this.diffInDaysBetweenDateAndToday(new Date(cashFlowsData[2].finish))
 
+        // crea un array con los días faltantes y lo setea todo a cero
         const cashFlow = new Array(daysDiff);
         for (let j = 0; j < cashFlow.length; j++) {
             cashFlow[j] = 0
         }
         
+        // incorpora el monto de intereses en el array del cashflow
         for (let i = 0; i < cashFlowsData[2].dateInterest.length; i++) {
             cashFlow[this.diffInDaysBetweenDateAndToday(new Date(cashFlowsData[2].dateInterest[i]))] = cashFlowsData[2].amountInterest[i]
         }
 
+        // incorpora el gasto de inversión al momento cero con la última cotización
         const lastValueBond = await lastValueService.getInfoByBondName(cashFlowsData[2].bondName);
         cashFlow.unshift(-(lastValueBond[0].closePrice -1 +1))
 
+        // calcula la tir
         let tirDaily = irr(cashFlow)
         let tirAnnual = Math.pow(1+tirDaily, 365)
         let tirAnnualRound = this.roundToTwo(((tirAnnual)-1))
         console.log(tirAnnualRound)
     }
 
+    // redondea un numero flotante a dos decimales
     roundToTwo(num) {
         return +(Math.round(num + "e+4")  + "e-4");
     }
 
+    // calcula la diferencia en días entre hoy y la fecha que se le pase como parametro
     diffInDaysBetweenDateAndToday(date) {
         const today = new Date()
         const finishDate = moment([date.getFullYear(), date.getMonth(), date.getDate()])
