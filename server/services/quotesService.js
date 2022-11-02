@@ -14,7 +14,6 @@ class QuotesService {
         await lastValueService.deleteAll()
         const tiempoTranscurrido = Date.now();
         const hoy = new Date(tiempoTranscurrido);
-        console.log(hoy)
         for (let i = 0; i < arrayQuotesJson.length; i++) {
             arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(".","")
             arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(",",".")
