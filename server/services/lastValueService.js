@@ -7,6 +7,10 @@ class LastValueService {
         await lastValueRepository.eliminarTodos()
     }
 
+    async deleteByBondName(bondName) {
+        await lastValueRepository.eliminarPorBondname(bondName)
+    }
+
     async saveInfo(lastValue) {
         await lastValueRepository.subirInfo(lastValue)
     }

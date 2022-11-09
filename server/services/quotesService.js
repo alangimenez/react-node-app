@@ -14,29 +14,35 @@ class QuotesService {
         const arrayQuotesJson = JSON.parse(arrayQuotes)
 
         // elimina todos los registros anteriores en lastValue collection
-        await lastValueService.deleteAll()
+        // TODO: debe grabar los datos si antes no estaban en la colección, o actualizarlo si ya existian
+        // await lastValueService.deleteAll()
 
         // armado de información a guardar
         const tiempoTranscurrido = Date.now();
         const hoy = new Date(tiempoTranscurrido);
         for (let i = 0; i < arrayQuotesJson.length; i++) {
-            arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(".","")
-            arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(",",".")
-            arrayQuotesJson[i].value = arrayQuotesJson[i].value.replace(".","")
-            arrayQuotesJson[i].value = arrayQuotesJson[i].value.replace(",",".")
-            arrayQuotesJson[i].volumen = arrayQuotesJson[i].volumen.replace(".","")
-            arrayQuotesJson[i].volumen = arrayQuotesJson[i].volumen.replace(",",".")
-            let quote = new Quote(
-                arrayQuotesJson[i].name,
-                hoy.toLocaleDateString(),
-                hoy.toLocaleTimeString(),
-                parseFloat(arrayQuotesJson[i].value),
-                parseFloat(arrayQuotesJson[i].lastPrice),
-                parseFloat(arrayQuotesJson[i].volumen)
-            )
-
-            // guardado de información
-            lastValueService.saveInfo(quote)
+            let bond = await lastValueService.getInfoByBondName(arrayQuotes[i].name)
+            if (bond.length > 0) {
+                // TODO: reasignar datos del bono y volver a guardarlo
+            } else {
+                arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(".","")
+                arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(",",".")
+                arrayQuotesJson[i].value = arrayQuotesJson[i].value.replace(".","")
+                arrayQuotesJson[i].value = arrayQuotesJson[i].value.replace(",",".")
+                arrayQuotesJson[i].volumen = arrayQuotesJson[i].volumen.replace(".","")
+                arrayQuotesJson[i].volumen = arrayQuotesJson[i].volumen.replace(",",".")
+                let quote = new Quote(
+                    arrayQuotesJson[i].name,
+                    hoy.toLocaleDateString(),
+                    hoy.toLocaleTimeString(),
+                    parseFloat(arrayQuotesJson[i].value),
+                    parseFloat(arrayQuotesJson[i].lastPrice),
+                    parseFloat(arrayQuotesJson[i].volumen)
+                )
+    
+                // guardado de información
+                lastValueService.saveInfo(quote)
+            }
             quotesRepository.subirInfo(quote);
         }
         return {"message": "ok"}
