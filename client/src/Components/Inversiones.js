@@ -11,7 +11,15 @@ function Inversiones() {
 
         fetch("/quotes", requestOptions)
             .then((res) => res.json())
-            .then((data) => console.log(data));
+            .then((data) => console.log(data))
+
+        console.log("paso1")
+        
+        fetch("/tir/daily")
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+
+        console.log("paso2")
     }
 
     const [mensaje, setMensaje] = useState(0)

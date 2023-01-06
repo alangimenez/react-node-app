@@ -20,11 +20,14 @@ class QuotesService {
         // armado de información a guardar
         const tiempoTranscurrido = Date.now();
         const hoy = new Date(tiempoTranscurrido);
+        let quotee = {}
         for (let i = 0; i < arrayQuotesJson.length; i++) {
             let bond = await lastValueService.getInfoByBondName(arrayQuotes[i].name)
+            console.log(bond)
             if (bond.length > 0) {
                 // TODO: reasignar datos del bono y volver a guardarlo
             } else {
+                console.log(arrayQuotesJson)
                 arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(".","")
                 arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(",",".")
                 arrayQuotesJson[i].value = arrayQuotesJson[i].value.replace(".","")
@@ -42,8 +45,9 @@ class QuotesService {
     
                 // guardado de información
                 lastValueService.saveInfo(quote)
+                quotee = quote
             }
-            quotesRepository.subirInfo(quote);
+            quotesRepository.subirInfo(quotee);
         }
         return {"message": "ok"}
     }

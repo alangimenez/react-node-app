@@ -4,7 +4,8 @@ const path = require('path');
 const PORT = process.env.PORT || 3001;
 const app = express();
 const quotesRouter = require('./router/quotesRouter');
-const lastValueRouter = require('./router/lastValueRouter')
+const lastValueRouter = require('./router/lastValueRouter');
+const tirRouter = require('./router/tirRouter');
 
 // Hacer que node sirva los archivos de nuestro app React
 app.use(express.static(path.resolve(__dirname, '../client/build')));
@@ -22,6 +23,7 @@ app.post("/api", (req, res) => {
 
 app.use('/quotes', quotesRouter)
 app.use('/lastvalue', lastValueRouter)
+app.use('/tir', tirRouter)
 
 // Todas las peticiones GET que no hayamos manejado en las líneas anteriores retornaran nuestro app React
 app.get('*', (req, res) => {
