@@ -12,14 +12,23 @@ function Inversiones() {
         fetch("/quotes", requestOptions)
             .then((res) => res.json())
             .then((data) => console.log(data))
-
-        console.log("paso1")
         
-        fetch("/tir/daily")
+        fetch("/lastvalue", requestOptions)
             .then((res) => res.json())
             .then((data) => console.log(data))
 
-        console.log("paso2")
+        const requestOptionsTir = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'}
+        }
+
+        fetch("/tir/daily", requestOptionsTir)
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+
+        fetch("/lastvalue/tir")
+            .then((res) => res.json())
+            .then((data) => console.log(data))
     }
 
     const [mensaje, setMensaje] = useState(0)

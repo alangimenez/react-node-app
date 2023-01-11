@@ -13,7 +13,12 @@ class LastValueService {
     }
 
     async saveInfo(response) {
-        let arrayQuotes = response
+        let arrayQuotes;
+        if (typeof(response) == 'string') {
+            arrayQuotes = JSON.parse(response)
+        } else {
+            arrayQuotes = response
+        }
 
         const bonds = await lastValueRepository.leerInfo()
 

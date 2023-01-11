@@ -10,7 +10,15 @@ class QuotesService {
     }
 
     async saveInfo(response) {
-        let arrayQuotes = response
+        let arrayQuotes;
+        if (typeof(response) == 'string') {
+            arrayQuotes = JSON.parse(response)
+        } else {
+            arrayQuotes = response
+        }
+        
+
+        
 
         // convert response in model for persist in DB
         const tiempoTranscurrido = Date.now();

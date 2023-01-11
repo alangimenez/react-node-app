@@ -12,4 +12,9 @@ router.get('/tir', async (req, res) => {
     res.json(result)
 })
 
+router.post('/', async (req, res) => {
+    const result = await lastValueService.saveInfo(req.body.quotes);
+    res.json(result)
+})
+
 module.exports = router
