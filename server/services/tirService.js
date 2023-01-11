@@ -10,7 +10,7 @@ moment().format();
 class TirService {
     constructor() { }
 
-    async getTir() {
+    async generateTir() {
         // obtiene los cashFlows de todos los bonos (cambiar repository por service)
         const cashFlows = await cashFlowRepository.leerInfo()
 
@@ -50,8 +50,8 @@ class TirService {
         return arrayTir;
     }
 
-    async getTirDaily() {
-        // obtiene los cashFlows de todos los bonos (cambiar repository por service)
+    async generateTirDaily() {
+        // obtiene los cashFlows de todos los bonos
         const cashFlowsData = await cashFlowRepository.leerInfo()
         let tirAnnualRound = 0;
 
@@ -78,7 +78,7 @@ class TirService {
             const lastValueBond = await lastValueService.getInfoByBondName(cashFlowsData[i].bondName);
             cashFlow.unshift(-(lastValueBond[0].closePrice - 1 + 1))
 
-            // calcula la tir
+            // calculate tir and persist result in DB
             let tirDaily = irr(cashFlow)
             let tirAnnual = Math.pow(1 + tirDaily, 365)
             tirAnnualRound = this.roundToTwo(((tirAnnual) - 1))
@@ -91,8 +91,16 @@ class TirService {
                 )
             )            
         }
-        return(tirAnnualRound)
+        return {"message": "ok"}
 
+    }
+
+    async getTirDaily() {
+        return tirRepository.leerInfo()
+    }
+
+    async getTir() {
+        return tirRepository.leerInfo()
     }
 
     // redondea un numero flotante a dos decimales

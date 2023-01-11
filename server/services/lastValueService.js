@@ -1,4 +1,5 @@
-const lastValueRepository = require('../repository/daos/lastValueDao.js')
+const lastValueRepository = require('../repository/daos/lastValueDao.js');
+const tirRepository = require('../repository/daos/tirDao');
 
 class LastValueService {
     constructor() {}
@@ -11,8 +12,37 @@ class LastValueService {
         await lastValueRepository.eliminarPorBondname(bondName)
     }
 
-    async saveInfo(lastValue) {
-        await lastValueRepository.subirInfo(lastValue)
+    async saveInfo(response) {
+        let arrayQuotes = response
+
+        const bonds = await lastValueRepository.leerInfo()
+
+        for (let i = 0; i < arrayQuotes.length; i++) {
+            const indexBond = bonds.findIndex((e) => e.bondName == arrayQuotes[i].bondName)
+
+            if (indexBond > 0) {
+                // TODO: change info that exists in DB
+            } else {
+                arrayQuotes[i].lastPrice = arrayQuotes[i].lastPrice.replace(".","")
+                arrayQuotes[i].lastPrice = arrayQuotes[i].lastPrice.replace(",",".")
+                arrayQuotes[i].value = arrayQuotes[i].value.replace(".","")
+                arrayQuotes[i].value = arrayQuotes[i].value.replace(",",".")
+                arrayQuotes[i].volumen = arrayQuotes[i].volumen.replace(".","")
+                arrayQuotes[i].volumen = arrayQuotes[i].volumen.replace(",",".")
+                quote = new Quote(
+                    arrayQuotes[i].name,
+                    hoy.toLocaleDateString(),
+                    hoy.toLocaleTimeString(),
+                    parseFloat(arrayQuotes[i].value),
+                    parseFloat(arrayQuotes[i].lastPrice),
+                    parseFloat(arrayQuotes[i].volumen)
+                )
+    
+                // guardado de información
+                lastValueRepository.subirInfo(quote)
+            }
+        }
+        return {"message": "ok"}
     }
 
     async getInfoByBondName(bondName) {
@@ -34,6 +64,22 @@ class LastValueService {
             })
         }
         return response
+    }
+
+    async getQuotesWithTir() {
+        const quotes = await lastValueRepository.leerInfo();
+        const tir = await tirRepository.leerInfo();
+        const quotesResponse = []
+        for (let i = 0; i < quotes.length; i++) {
+            const index = tir.findIndex((e) => e.bondName == quotes[i].bondName);
+            if (index > 0) {
+                quotesResponse.push({
+                    ...quotes[i],
+                    "tir": tir[index].tir
+                })
+            }
+        }
+        return quotesResponse
     }
 }
 

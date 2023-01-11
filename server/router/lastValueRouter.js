@@ -7,4 +7,9 @@ router.get('/', async (req, res) => {
     res.status(200).json(datos)
 })
 
+router.get('/tir', async (req, res) => {
+    const result = await lastValueService.getQuotesWithTir();
+    res.json(result)
+})
+
 module.exports = router

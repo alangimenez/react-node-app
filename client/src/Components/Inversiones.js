@@ -46,6 +46,27 @@ function Inversiones() {
 
     useEffect(() => verCotizaciones(), []);
 
+    const botonPrueba = () => {
+        const datoPrueba = [
+            {"key1": "value1"},
+            {"key2": "value2"},
+            {"key3": "value3"}
+        ]
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datoPrueba)
+        };
+
+        fetch("/prueba", requestOptions)
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+            })
+            .catch((e) => console.log(e));
+    }
+
     return (
         <div className="container">
             <h1>Inversiones</h1>
@@ -53,6 +74,7 @@ function Inversiones() {
             <textarea rows={10} cols={50} className="form-control" onChange={handleChange}></textarea>
             <button onClick={guardarCotizaciones} className="btn btn-dark">Actualizar cotizaciones</button>
             <button onClick={verCotizaciones} className="btn btn-dark">Ver cotizaciones</button>
+            <button onClick={botonPrueba} className="btn btn-dark">Boton de prueba</button>
 
             <table className='table table-striped'>
                 <thead>

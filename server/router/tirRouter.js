@@ -10,4 +10,12 @@ router.get('/daily', async (req, res) => {
     res.status(200).json(await tirService.getTirDaily())
 })
 
+router.post('/daily', async (req, res) => {
+    res.status(200).json(await tirService.generateTirDaily())
+})
+
+router.post('/', async (req, res) => {
+    res.status(200).json(await tirService.generateTir())
+})
+
 module.exports = router
