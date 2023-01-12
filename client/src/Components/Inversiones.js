@@ -28,7 +28,10 @@ function Inversiones() {
 
         fetch("/lastvalue/tir")
             .then((res) => res.json())
-            .then((data) => console.log(data))
+            .then((data) => {
+                setCotizacion(data)
+                console.log(data)
+            })
     }
 
     const [mensaje, setMensaje] = useState(0)
@@ -45,7 +48,7 @@ function Inversiones() {
             headers: { 'Content-Type': 'application/json' }
         };
 
-        fetch("/lastvalue", requestOptions)
+        fetch("/lastvalue/tir", requestOptions)
             .then((res) => res.json())
             .then((data) => {
                 setCotizacion(data)
@@ -104,7 +107,7 @@ function Inversiones() {
                         <td>{e.lastPrice}</td>
                         <td>{e.closePrice}</td>
                         <td>{e.volume}</td>
-                        <td></td>
+                        <td>{e.tir}</td>
                     </tr>)
                 }
                 </tbody>
