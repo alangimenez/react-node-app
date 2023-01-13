@@ -9,30 +9,45 @@ class QuotesService {
         return await quotesRepository.eliminarTodos(bondName);
     }
 
-    async saveInfo(arrayQuotes) {
-        const arrayQuotesJson = JSON.parse(arrayQuotes)
-        await lastValueService.deleteAll()
+    async saveInfo(response) {
+        let arrayQuotes;
+        if (typeof(response) == 'string') {
+            arrayQuotes = JSON.parse(response)
+            arrayQuotes = arrayQuotes.quotes
+        } else {
+            arrayQuotes = response
+        }
+
+        // convert response in model for persist in DB
         const tiempoTranscurrido = Date.now();
         const hoy = new Date(tiempoTranscurrido);
-        console.log(hoy)
-        for (let i = 0; i < arrayQuotesJson.length; i++) {
-            arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(".","")
-            arrayQuotesJson[i].lastPrice = arrayQuotesJson[i].lastPrice.replace(",",".")
-            arrayQuotesJson[i].value = arrayQuotesJson[i].value.replace(".","")
-            arrayQuotesJson[i].value = arrayQuotesJson[i].value.replace(",",".")
-            arrayQuotesJson[i].volumen = arrayQuotesJson[i].volumen.replace(".","")
-            arrayQuotesJson[i].volumen = arrayQuotesJson[i].volumen.replace(",",".")
-            let quote = new Quote(
-                arrayQuotesJson[i].name,
+        let arrayQuotesToPersist = []
+        for (let i = 0; i < arrayQuotes.length; i++) {
+            arrayQuotes[i].lastPrice = arrayQuotes[i].lastPrice.replace(".","")
+            arrayQuotes[i].lastPrice = arrayQuotes[i].lastPrice.replace(",",".")
+            arrayQuotes[i].value = arrayQuotes[i].value.replace(".","")
+            arrayQuotes[i].value = arrayQuotes[i].value.replace(",",".")
+            arrayQuotes[i].volumen = arrayQuotes[i].volumen.replace(".","")
+            arrayQuotes[i].volumen = arrayQuotes[i].volumen.replace(",",".")
+            const quote = new Quote(
+                arrayQuotes[i].name,
                 hoy.toLocaleDateString(),
                 hoy.toLocaleTimeString(),
-                parseFloat(arrayQuotesJson[i].value),
-                parseFloat(arrayQuotesJson[i].lastPrice),
-                parseFloat(arrayQuotesJson[i].volumen)
+                parseFloat(arrayQuotes[i].value),
+                parseFloat(arrayQuotes[i].lastPrice),
+                parseFloat(arrayQuotes[i].volumen)
             )
-            lastValueService.saveInfo(quote)
-            quotesRepository.subirInfo(quote);
+            arrayQuotesToPersist.push(quote)
         }
+
+        // save info
+        quotesRepository.subirInfo({
+            "date": hoy.toLocaleDateString(),
+            "time": hoy.toLocaleTimeString(),
+            "quotes": arrayQuotesToPersist
+        })
+
+        // response
         return {"message": "ok"}
     }
 }
