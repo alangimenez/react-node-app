@@ -17,7 +17,6 @@ class QuotesService {
         } else {
             arrayQuotes = response
         }
-        
 
         // convert response in model for persist in DB
         const tiempoTranscurrido = Date.now();
@@ -43,8 +42,8 @@ class QuotesService {
 
         // save info
         quotesRepository.subirInfo({
-            "date": hoy.toLocaleDateString,
-            "time": hoy.toLocaleTimeString,
+            "date": hoy.toLocaleDateString(),
+            "time": hoy.toLocaleTimeString(),
             "quotes": arrayQuotesToPersist
         })
 

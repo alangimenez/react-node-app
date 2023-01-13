@@ -7,6 +7,15 @@ class tirDao extends CrudMongo {
     constructor() {
         super(tirModel)
     }
+
+    async modifyData(bondName, date, time, tir) {
+        try {
+            const result = await this.model.updateOne({bondName: bondName}, {$set: {date: date, time: time, tir: tir}})
+            return result;
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
 }
 
 let tirSingleton = new tirDao()

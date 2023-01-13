@@ -2,7 +2,8 @@ class MidSecurity {
     constructor() {}
 
     checkPassword (req, res, next) {
-        if (req.body.password == process.env.WORD_SECRET) {
+        const indexHeader = req.rawHeaders.findIndex((e) => e == 'password-security')
+        if (req.rawHeaders[indexHeader+1] == process.env.WORD_SECRET) {
             next()
         } else {
             res.status(401).json({"error_message": "You are not allowed to do this operation"})

@@ -23,11 +23,13 @@ class LastValueService {
         }
 
         const bonds = await lastValueRepository.leerInfo()
+
         const tiempoTranscurrido = Date.now();
         const hoy = new Date(tiempoTranscurrido);
+
         for (let i = 0; i < arrayQuotes.length; i++) {
             const indexBond = bonds.findIndex((e) => e.bondName == arrayQuotes[i].name)
-            if (indexBond => 0) {
+            if (indexBond >= 0) {
                 arrayQuotes[i].lastPrice = arrayQuotes[i].lastPrice.replace(".","")
                 arrayQuotes[i].lastPrice = arrayQuotes[i].lastPrice.replace(",",".")
                 arrayQuotes[i].closePrice = arrayQuotes[i].closePrice.replace(".","")
@@ -65,7 +67,8 @@ class LastValueService {
     }
 
     async getInfoByBondName(bondName) {
-        return await lastValueRepository.leerInfoPorBondname(bondName)
+        const result =  await lastValueRepository.leerInfoPorBondname(bondName);
+        return result[0]
     }
 
     async getAll() {
@@ -87,12 +90,11 @@ class LastValueService {
 
     async getQuotesWithTir() {
         const quotes = await lastValueRepository.leerInfo();
-        console.log(quotes)
         const tir = await tirRepository.leerInfo();
         const quotesResponse = []
         for (let i = 0; i < quotes.length; i++) {
             const index = tir.findIndex((e) => e.bondName == quotes[i].bondName);
-            if (index > 0) {
+            if (index >= 0) {
                 quotesResponse.push({
                     "bondName" : quotes[i].bondName,
                     "date": quotes[i].date,

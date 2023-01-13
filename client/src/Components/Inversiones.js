@@ -2,16 +2,26 @@ import { useState, useEffect } from 'react'
 
 function Inversiones() {
     // cargar cotizaciones
+
+    const [mensajeInput, setMensajeInput] = useState("")
+
+    const handleChangeInput = (event) => {
+        setMensajeInput(event.target.value)
+    }
+    const requestOptionsGet = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 'password-security': mensajeInput}        }
+
     const guardarCotizaciones = async () => {
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ quotes: mensaje, password: mensajeInput })
+            headers: { 'Content-Type': 'application/json', 'password-security': mensajeInput },
+            body: JSON.stringify({ quotes: mensaje })
         };
 
         const requestOptionsTir = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json', 'password-security': mensajeInput},
             body: JSON.stringify({password: mensajeInput})
         }
 
@@ -20,7 +30,6 @@ function Inversiones() {
             };
 
         try {
-            console.log("0")
 
             await fetch("/quotes", requestOptions)
             .then((res) => res.json())
@@ -33,26 +42,25 @@ function Inversiones() {
                 }
             })
         
-        console.log("1")
 
-        await fetch("/lastvalue", requestOptions)
-            .then((res) => res.json())
-            .then((data) => console.log(data))
+            await fetch("/lastvalue", requestOptions)
+                .then((res) => res.json())
+                .then((data) => console.log(data))
 
-        console.log("2")
 
-        await fetch("/tir/daily", requestOptionsTir)
-            .then((res) => res.json())
-            .then((data) => console.log(data))
+            await fetch("/tir/daily", requestOptionsTir)
+                .then((res) => res.json())
+                .then((data) => console.log(data))
 
-        console.log("3")
 
-        await fetch("/lastvalue/tir")
+
+        await fetch("/lastvalue/tir", requestOptionsGet)
             .then((res) => res.json())
             .then((data) => {
                 setCotizacion(data)
                 console.log(data)
             })
+            
 
         } catch (e) {
             console.log("hoal" + e)
@@ -65,11 +73,6 @@ function Inversiones() {
         setMensaje(event.target.value)
     }
 
-    const [mensajeInput, setMensajeInput] = useState("")
-
-    const handleChangeInput = (event) => {
-        setMensajeInput(event.target.value)
-    }
 
     // ver cotizaciones
     const [cotizacion, setCotizacion] = useState([])
@@ -79,7 +82,7 @@ function Inversiones() {
             headers: { 'Content-Type': 'application/json' }
         };
 
-        fetch("/lastvalue/tir", requestOptions)
+        fetch("/lastvalue/tir", requestOptionsGet)
             .then((res) => res.json())
             .then((data) => {
                 setCotizacion(data)
@@ -87,7 +90,7 @@ function Inversiones() {
             });
     }
 
-    // useEffect(() => verCotizaciones(), []);
+    useEffect(() => {}, [cotizacion]);
 
     return (
         <div className="container">
@@ -103,14 +106,14 @@ function Inversiones() {
 
             <table className='table table-striped'>
                 <thead>
-                <tr>
-                    <th scope='col'>Ticket</th>
-                    <th scope='col'>Fecha</th>
-                    <th scope='col'>Ùltimo precio</th>
-                    <th scope='col'>Precio de cierre</th>
-                    <th scope='col'>Volumen</th>
-                    <th scope='col'>TIR</th>
-                </tr>
+                    <tr>
+                        <th scope='col'>Ticket</th>
+                        <th scope='col'>Fecha</th>
+                        <th scope='col'>Ùltimo precio</th>
+                        <th scope='col'>Precio de cierre</th>
+                        <th scope='col'>Volumen</th>
+                        <th scope='col'>TIR</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {

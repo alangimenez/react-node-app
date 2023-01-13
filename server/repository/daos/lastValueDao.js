@@ -20,8 +20,7 @@ class lastValueDao extends CrudMongo {
 
     async modifyValues(bond) {
         try {
-            console.log(bond)
-            const result = await this.model.updateOne({bondName: bond.bondName}, {$set: {closePrice: bond.closePrice, lastPrice: bond.lastPrice, volume: bond.volumen}})
+            const result = await this.model.updateOne({bondName: bond.name}, {$set: {closePrice: bond.closePrice, lastPrice: bond.lastPrice, volume: bond.volumen}})
             return result
         } catch (e) {
             logger.error("Can't delete info in modifyValues")

@@ -53,8 +53,8 @@ class TirService {
     async generateTirDaily() {
         // obtiene los cashFlows de todos los bonos
         const cashFlowsData = await cashFlowRepository.leerInfo()
+        const tirData = await tirRepository.leerInfo()
         let tirAnnualRound = 0;
-        console.log(cashFlowsData)
 
         // ESTO SOLO SERÍA NECESARIO SI QUISIERA ACTUALIZAR LA TIR DE UN BONO EN PARTICULAR
         // obtiene el indice del bono que se quiere calcular la tir
@@ -77,20 +77,28 @@ class TirService {
 
             // incorpora el gasto de inversión al momento cero con la última cotización
             const lastValueBond = await lastValueService.getInfoByBondName(cashFlowsData[i].bondName);
-            cashFlow.unshift(-(lastValueBond[0].closePrice - 1 + 1))
+            cashFlow.unshift(-(lastValueBond.closePrice - 1 + 1))
+
+            const tiempoTranscurrido = Date.now();
+            const hoy = new Date(tiempoTranscurrido);
 
             // calculate tir and persist result in DB
             let tirDaily = irr(cashFlow)
             let tirAnnual = Math.pow(1 + tirDaily, 365)
             tirAnnualRound = this.roundToTwo(((tirAnnual) - 1))
-            tirRepository.subirInfo(
-                new TirModel(
-                    cashFlowsData[i].bondname,
-                    "data",
-                    "time",
-                    tirAnnualRound
-                )
-            )            
+            const index = tirData.findIndex((e) => e.bondName == lastValueBond.bondName)
+            if (index >= 0) {
+                tirRepository.modifyData(lastValueBond.bondName, hoy.toLocaleDateString(), hoy.toLocaleTimeString(), tirAnnualRound)
+            } else {
+                tirRepository.subirInfo(
+                    new TirModel(
+                        cashFlowsData[i].bondName,
+                        "data",
+                        "time",
+                        tirAnnualRound
+                    )
+                ) 
+            }       
         }
         return {"message": "ok"}
 
