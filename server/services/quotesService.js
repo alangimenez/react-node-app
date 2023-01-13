@@ -13,11 +13,10 @@ class QuotesService {
         let arrayQuotes;
         if (typeof(response) == 'string') {
             arrayQuotes = JSON.parse(response)
+            arrayQuotes = arrayQuotes.quotes
         } else {
             arrayQuotes = response
         }
-        
-
         
 
         // convert response in model for persist in DB

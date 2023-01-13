@@ -54,6 +54,7 @@ class TirService {
         // obtiene los cashFlows de todos los bonos
         const cashFlowsData = await cashFlowRepository.leerInfo()
         let tirAnnualRound = 0;
+        console.log(cashFlowsData)
 
         // ESTO SOLO SERÍA NECESARIO SI QUISIERA ACTUALIZAR LA TIR DE UN BONO EN PARTICULAR
         // obtiene el indice del bono que se quiere calcular la tir

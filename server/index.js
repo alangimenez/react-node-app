@@ -7,6 +7,7 @@ const quotesRouter = require('./router/quotesRouter');
 const lastValueRouter = require('./router/lastValueRouter');
 const tirRouter = require('./router/tirRouter');
 const pruebaRouter = require('./router/pruebaRouter');
+const midSecurity = require('./middlewares/security')
 
 // Hacer que node sirva los archivos de nuestro app React
 app.use(express.static(path.resolve(__dirname, '../client/build')));
@@ -22,10 +23,10 @@ app.post("/api", (req, res) => {
     res.json({ message: req.body });
 });
 
-app.use('/quotes', quotesRouter)
-app.use('/lastvalue', lastValueRouter)
-app.use('/tir', tirRouter)
-app.use('/prueba', pruebaRouter)
+app.use('/quotes', midSecurity.checkPassword ,quotesRouter)
+app.use('/lastvalue', midSecurity.checkPassword,lastValueRouter)
+app.use('/tir', midSecurity.checkPassword,tirRouter)
+app.use('/prueba', midSecurity.checkPassword,pruebaRouter)
 
 // Todas las peticiones GET que no hayamos manejado en las líneas anteriores retornaran nuestro app React
 app.get('*', (req, res) => {
