@@ -8,6 +8,7 @@ const lastValueRouter = require('./router/lastValueRouter');
 const tirRouter = require('./router/tirRouter');
 const cashflowRouter = require('./router/cashFlowRouter');
 const pruebaRouter = require('./router/pruebaRouter');
+const investmentRouter = require('./router/investmentRouter');
 const midSecurity = require('./middlewares/security')
 
 // Hacer que node sirva los archivos de nuestro app React
@@ -29,6 +30,7 @@ app.use('/lastvalue', midSecurity.checkPassword,lastValueRouter)
 app.use('/tir', midSecurity.checkPassword, tirRouter)
 app.use('/cashflow', midSecurity.checkPassword, cashflowRouter)
 app.use('/prueba', midSecurity.checkPassword, pruebaRouter)
+app.use('/investment', investmentRouter)
 
 // Todas las peticiones GET que no hayamos manejado en las líneas anteriores retornaran nuestro app React
 app.get('*', (req, res) => {
