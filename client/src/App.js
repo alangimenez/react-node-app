@@ -4,6 +4,7 @@ import Demo from './Components/Demo';
 import Ingresos from './Components/Ingresos';
 import Gastos from './Components/Gastos';
 import Inversiones from './Components/Inversiones'
+import Cashflow from './Components/Cashflow';
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route exact path="/gastos" element={<Gastos />}>
         </Route>
         <Route exact path="/inversiones" element={<Inversiones />} />
+        <Route exact path="/cashflow" element={<Cashflow />}>
+        </Route>
       </Routes>
     </BrowserRouter>
   )

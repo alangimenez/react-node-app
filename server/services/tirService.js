@@ -4,8 +4,7 @@ const { irr } = require('node-irr');
 const TirModel = require('../models/tirModel')
 const TirResponse = require('../models/tirResponse')
 const tirRepository = require('../repository/daos/tirDao')
-const moment = require('moment'); // require
-moment().format();
+const { diffInDaysBetweenDateAndToday, roundToTwo } = require('../utils/utils')
 
 class TirService {
     constructor() { }
@@ -26,7 +25,7 @@ class TirService {
             // calcula la tir y guarda la información en la base de datos
             let tirMonthly = irr(cashFlows[i].cashFlow)
             let tirAnnual = Math.pow(1 + tirMonthly, 12)
-            let tirAnnualRound = this.roundToTwo(((tirAnnual) - 1))
+            let tirAnnualRound = roundToTwo(((tirAnnual) - 1))
             let tirModel = new TirModel(
                 cashFlows[i].bondName,
                 new Date().toLocaleString(),
@@ -62,7 +61,7 @@ class TirService {
 
         for (let i = 0; i < cashFlowsData.length; i++) {
             // calcula cuantos días faltan hasta el vencimiento del ticket
-            const daysDiff = this.diffInDaysBetweenDateAndToday(new Date(cashFlowsData[i].finish))
+            const daysDiff = diffInDaysBetweenDateAndToday(new Date(cashFlowsData[i].finish))
 
             // crea un array con los días faltantes y lo setea todo a cero
             const cashFlow = new Array(daysDiff);
@@ -72,7 +71,7 @@ class TirService {
 
             // incorpora el monto de intereses en el array del cashflow
             for (let k = 0; k < cashFlowsData[i].dateInterest.length; k++) {
-                cashFlow[this.diffInDaysBetweenDateAndToday(new Date(cashFlowsData[i].dateInterest[k]))] = cashFlowsData[i].amountInterest[k]
+                cashFlow[diffInDaysBetweenDateAndToday(new Date(cashFlowsData[i].dateInterest[k]))] = cashFlowsData[i].amountInterest[k]
             }
 
             // incorpora el gasto de inversión al momento cero con la última cotización
@@ -85,7 +84,7 @@ class TirService {
             // calculate tir and persist result in DB
             let tirDaily = irr(cashFlow)
             let tirAnnual = Math.pow(1 + tirDaily, 365)
-            tirAnnualRound = this.roundToTwo(((tirAnnual) - 1))
+            tirAnnualRound = roundToTwo(((tirAnnual) - 1))
             const index = tirData.findIndex((e) => e.bondName == lastValueBond.bondName)
             if (index >= 0) {
                 tirRepository.modifyData(lastValueBond.bondName, hoy.toLocaleDateString(), hoy.toLocaleTimeString(), tirAnnualRound)
@@ -110,19 +109,6 @@ class TirService {
 
     async getTir() {
         return tirRepository.leerInfo()
-    }
-
-    // redondea un numero flotante a dos decimales
-    roundToTwo(num) {
-        return +(Math.round(num + "e+4") + "e-4");
-    }
-
-    // calcula la diferencia en días entre hoy y la fecha que se le pase como parametro
-    diffInDaysBetweenDateAndToday(date) {
-        const today = new Date()
-        const finishDate = moment([date.getFullYear(), date.getMonth(), date.getDate()])
-        const todayMoment = moment([today.getFullYear(), today.getMonth(), today.getDate()])
-        return finishDate.diff(todayMoment, 'days')
     }
 }
 
