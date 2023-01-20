@@ -1,8 +1,6 @@
 const Cashflow = require('../models/database/cashflowMg')
 const cashFlowRepository = require('../repository/daos/cashflowDao')
-const moment = require('moment'); // require
-moment().format();
-
+const { diffInDaysBetweenDateAndToday } = require('../utils/utils')
 
 class CashFlowService {
     constructor() {}
@@ -25,8 +23,6 @@ class CashFlowService {
     async getAllCashFlowSorted() {
 
         // TODO: consider actual quantity in portfolio
-        // TODO: add how many days are between today and dateInterest
-        // TODO: create an util for dates
 
         const cashFlows = await cashFlowRepository.leerInfo()
         const flowOfInterest = []
@@ -37,7 +33,8 @@ class CashFlowService {
                 flowOfInterest.push({
                     "bondName": bond.bondName,
                     "dateInterest": new Date(+year, +month -1, +day),
-                    "amountInterest": bond.amountInterest[i]
+                    "amountInterest": bond.amountInterest[i],
+                    "remainingsDays": diffInDaysBetweenDateAndToday(new Date(+year, +month -1, +day))
                 })
             }
         })
@@ -46,6 +43,7 @@ class CashFlowService {
         flowOfInterest.map((interest) => {
             interest.dateInterest = interest.dateInterest.toLocaleDateString()
         })
+        
 
         return (flowOfInterest)
     }

@@ -28,6 +28,7 @@ function Cashflow() {
                         <th scope='col'>Bono</th>
                         <th scope='col'>Fecha de pago</th>
                         <th scope='col'>Monto de pago</th>
+                        <th scope='col'>Dias restantes para cobro</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,7 @@ function Cashflow() {
                         <td>{e.bondName}</td>
                         <td>{e.dateInterest}</td>
                         <td>{e.amountInterest}</td>
+                        <td>{e.remainingsDays}</td>
                     </tr>)
                 }
                 </tbody>
