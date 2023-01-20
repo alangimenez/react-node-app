@@ -100,11 +100,13 @@ function Inversiones() {
                 "name": document.getElementById("nameOfAsset").value,
                 "ticket": document.getElementById("ticket").value,
                 "purchaseDate": document.getElementById("purchaseDate").value,
-                "quantity": document.getElementById("quantity").value,
+                "purchaseQuantity": document.getElementById("quantity").value,
                 "purchasePrice": document.getElementById("purchasePrice").value,
                 "currency": document.getElementById("currency").value,
                 "assetType": document.getElementById("assetType").value,
-                "operation": document.getElementById("operation").value
+                "operation": document.getElementById("operation").value,
+                "actualQuantity": document.getElementById("quantity").value,
+                "commission": document.getElementById("commision").value
             })
         }
 
@@ -189,6 +191,10 @@ function Inversiones() {
                                 <div className="form-group">
                                     <label htmlFor="purchasePrice">Purchase price</label>
                                     <input type="number" className="form-control" id="purchasePrice"></input>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="commission">Commissions</label>
+                                    <input type="number" className="form-control" id="commission"></input>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="currency">Currency</label>
