@@ -12,4 +12,9 @@ router.get('/', async (req, res) => {
     res.status(200).json(result)
 })
 
+router.get('/portfolio', async (req, res) => {
+    const result = await investmentService.getPortfolio()
+    res.status(200).json(result)
+})
+
 module.exports = router;

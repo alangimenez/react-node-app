@@ -6,6 +6,7 @@ import Gastos from './Components/Gastos';
 import Inversiones from './Components/Inversiones'
 import Cashflow from './Components/Cashflow';
 import InversionesHistoricas from './Components/InversionesHistoricas'
+import Portfolio from './Components/Portfolio';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route exact path="/cashflow" element={<Cashflow />}>
         </Route>
         <Route exact path="/inversiones/historico" element={<InversionesHistoricas />} />
+        <Route exact path="/portfolio" element={<Portfolio />} />
       </Routes>
     </BrowserRouter>
   )
