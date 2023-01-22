@@ -30,8 +30,8 @@ class InvestmentService {
         investments.map((e) => {
             investmentsResponse.push({
                 ...e._doc,
-                quantity: e.quantity.toString(),
-                purchasePrice: e.purchasePrice.toString()
+                operationQuantity: e.operationQuantity.toString(),
+                operationPrice: e.operationPrice.toString()
             })
         })
         return investmentsResponse

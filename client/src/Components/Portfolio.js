@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import Navbar from "./Navbar"
 
 function Portfolio() {
 
@@ -24,6 +25,9 @@ function Portfolio() {
 
     return (
         <div className="container">
+
+            <Navbar />
+
             <table className='table table-striped'>
                 <thead>
                     <tr>

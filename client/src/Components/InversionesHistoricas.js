@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import Navbar from "./Navbar"
 
 function HistoricalInvestment() {
 
@@ -29,6 +30,8 @@ function HistoricalInvestment() {
 
     return (
         <div className="container">
+            <Navbar />
+
             <div >
                 <label htmlFor='password'>Password</label>
                 <input id="password" className='form-control' onChange={handleChangeInput} style={{ width: 200 + 'px' }} type='password'></input>

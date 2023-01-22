@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Navbar from './Navbar';
 
 function Cashflow() {
 
@@ -22,6 +23,9 @@ function Cashflow() {
 
     return (
         <div className='container'>
+
+            <Navbar />
+
             <table className='table table-striped'>
                 <thead>
                     <tr>
