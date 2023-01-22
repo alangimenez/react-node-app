@@ -8,7 +8,9 @@ const lastValueRouter = require('./router/lastValueRouter');
 const tirRouter = require('./router/tirRouter');
 const cashflowRouter = require('./router/cashFlowRouter');
 const pruebaRouter = require('./router/pruebaRouter');
-const midSecurity = require('./middlewares/security')
+const expensesRouter = require('./router/expensesRouter');
+const accountRouter = require('./router/accountRouter');
+const midSecurity = require('./middlewares/security');
 
 // Hacer que node sirva los archivos de nuestro app React
 app.use(express.static(path.resolve(__dirname, '../client/build')));
@@ -28,6 +30,8 @@ app.use('/quotes', midSecurity.checkPassword , quotesRouter)
 app.use('/lastvalue', midSecurity.checkPassword,lastValueRouter)
 app.use('/tir', midSecurity.checkPassword, tirRouter)
 app.use('/cashflow', midSecurity.checkPassword, cashflowRouter)
+app.use('/expenses', expensesRouter)
+app.use('/account', accountRouter)
 app.use('/prueba', midSecurity.checkPassword, pruebaRouter)
 
 // Todas las peticiones GET que no hayamos manejado en las líneas anteriores retornaran nuestro app React
