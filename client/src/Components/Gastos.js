@@ -1,6 +1,12 @@
+import ModalNewExpense from "./Expenses/ModalNewExpense"
+import ExpensesTables from "./Expenses/ExpensesTable"
+
 function Gastos () {
     return (
-        <h1>Gastos</h1>
+        <div>
+            <ModalNewExpense />
+            <ExpensesTables />
+        </div>
     )
 }
 

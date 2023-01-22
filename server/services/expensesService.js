@@ -24,6 +24,11 @@ class ExpensesService {
         const result = await expensesRepository.getExpensesFilterByDate(date);
         return result;
     }
+
+    async getLastTenExpenses () {
+        const result = await expensesRepository.getLastTenExpenses();
+        return result;
+    }
 }
 
 const expensesService = new ExpensesService()

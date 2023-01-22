@@ -12,4 +12,9 @@ router.get('/date', async (req, res) => {
     res.status(200).json(result)
 })
 
+router.get('/', async (req, res) => {
+    const result = await expenseService.getLastTenExpenses();
+    res.status(200).json(result);
+})
+
 module.exports = router

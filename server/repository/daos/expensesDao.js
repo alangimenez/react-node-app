@@ -17,6 +17,15 @@ class expenseDao extends CrudMongo {
         }
     }
 
+    async getLastTenExpenses () {
+        try {
+            const result = await this.model.find().sort({$natural:-1}).limit(3)
+            return result;
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+
 }
 
 let expenseSingleton = new expenseDao()
